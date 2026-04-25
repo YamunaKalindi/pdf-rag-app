@@ -1,13 +1,3 @@
----
-title: PDF RAG Application
-emoji: 📄
-colorFrom: blue
-colorTo: purple
-sdk: streamlit
-app_file: app.py
-pinned: false
----
-
 # 📄 PDF RAG Application
 
 A Retrieval-Augmented Generation (RAG) system for querying research papers with accurate, citation-backed answers.
