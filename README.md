@@ -1,3 +1,13 @@
+---
+title: PDF RAG Application
+emoji: 📄
+colorFrom: blue
+colorTo: purple
+sdk: streamlit
+app_file: app.py
+pinned: false
+---
+
 # 📄 PDF RAG Application
 
 A Retrieval-Augmented Generation (RAG) system for querying research papers with accurate, citation-backed answers.
@@ -12,7 +22,7 @@ This application allows users to:
 * Ask natural language questions
 * Receive **grounded answers with precise citations**
 
-Designed to prioritize **factual accuracy over completeness**, making it suitable for research-grade question answering.
+Designed to prioritize **factual accuracy and grounded responses over generative completeness**, making it suitable for research-grade question answering.
 
 The system ensures **minimal hallucination** by combining semantic retrieval with strict answer grounding.
 
@@ -52,14 +62,16 @@ The system ensures **minimal hallucination** by combining semantic retrieval wit
    * Retrieves top-k candidates (**k = 12**) for high recall
    * Applies filtering, deduplication, and reranking
    * Returns top 5 high-quality chunks for answer generation
-   * Uses semantic similarity + lightweight lexical boosting
+   * Uses semantic similarity + lightweight lexical boosting  
      → improves accuracy for definition-style queries
 
 6. **LLM-based Answer Generation**
 
-   * Model: Mistral (via Ollama / Hugging Face API)
-   * LLM used strictly for **grounded answer extraction (not knowledge generation)**
-   * Enforces extractive answering from retrieved context only
+   * Model:
+     * Local: Ollama (Mistral)
+     * Production: Hugging Face Inference API (Meta Llama 3 8B Instruct)
+   * LLM is used **only for answer synthesis from retrieved context**, not for knowledge generation
+   * Enforces strictly grounded responses
 
 7. **Output + Citations**
 
@@ -97,9 +109,30 @@ The system ensures **minimal hallucination** by combining semantic retrieval wit
 * **Embeddings**: SentenceTransformers (`bge-small-en-v1.5`)
 * **Vector DB**: ChromaDB
 * **LLM**:
-
   * Local: Ollama (Mistral)
-  * Production: Hugging Face Inference API
+  * Production: Hugging Face Inference API (Meta Llama 3 8B Instruct)
+
+---
+
+## 🧠 Design Decisions (Important)
+
+* **Semantic embeddings over keyword search**  
+  → improves robustness to query phrasing  
+
+* **Structure-aware chunking instead of fixed-size splitting**  
+  → preserves meaning and improves retrieval quality  
+
+* **High recall (k=12) + precision filtering (top 5)**  
+  → ensures relevant context is not missed  
+
+* **LLM used only for grounded extraction**  
+  → improves explainability and reduces hallucination  
+
+* **Strict prompting + post-filtering**  
+  → enforces factual correctness  
+
+* **Environment-aware model switching**  
+  → uses Ollama locally and Hugging Face API in production  
 
 ---
 
@@ -112,10 +145,22 @@ The system ensures **minimal hallucination** by combining semantic retrieval wit
 
 ---
 
+## 🧪 Evaluation Insight
+
+The system performs strongly on:
+- Definition-based queries  
+- Concept explanation questions  
+- Fact retrieval from research papers  
+
+Performance may degrade for:
+- Figure/table-specific queries (not yet supported)  
+- Highly implicit or cross-section reasoning questions  
+
+---
+
 ## ⚠️ Limitations
 
 * Does not currently process:
-
   * Images
   * Tables
   * Figures
@@ -130,25 +175,6 @@ The system ensures **minimal hallucination** by combining semantic retrieval wit
 * OCR integration for scanned PDFs
 * Section-aware semantic chunking
 * Cross-encoder reranking for higher precision
-
----
-
-## 🧠 Design Decisions (Important)
-
-* **Semantic embeddings over keyword search**
-  → improves robustness to query phrasing
-
-* **Structure-aware chunking instead of fixed-size splitting**
-  → preserves meaning and improves retrieval quality
-
-* **High recall (k=12) + precision filtering (top 5)**
-  → ensures relevant context is not missed
-
-* **LLM used only for grounded extraction**
-  → improves explainability and reduces hallucination
-
-* **Strict prompting + post-filtering**
-  → enforces factual correctness
 
 ---
 
