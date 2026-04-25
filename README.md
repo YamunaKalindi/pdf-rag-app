@@ -125,7 +125,9 @@ The system ensures **minimal hallucination** by combining semantic retrieval wit
   → uses Ollama locally and Hugging Face API in production  
 
 ---
+## 🧩 Architecture Diagram
 
+![PDF RAG Application Architecture Diagram](image_2.png)
 ## 🧪 Example Queries
 
 * What is self-attention?
