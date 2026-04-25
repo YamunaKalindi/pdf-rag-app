@@ -1,0 +1,17 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Env variables
+.env
+
+# Chroma DB
+db/
+
+# Data files
+data/pdfs/
+
+# OS files
+.DS_Store
+Thumbs.db
